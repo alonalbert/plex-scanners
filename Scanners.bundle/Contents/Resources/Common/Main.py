@@ -2,9 +2,7 @@ import os
 
 import sys
 
-series = __import__("Plex Series Scanner")
-
-def scan_all(root, path, media):
+def scan(scanner, root, path, media):
   dir = os.path.join(root, path)
   dirItems = os.listdir(dir)
   files =[]
@@ -16,14 +14,16 @@ def scan_all(root, path, media):
     else:
       files.append(itemPath)
 
-  series.Scan(path, files, media, subdirs, root=root)
+  scanner.Scan(path, files, media, subdirs, root=root)
   for subdir in subdirs:
     # Get subdir name with root striped out
     subdirRelative = subdir[len(root) + 1:]
-    scan_all(root, subdirRelative, media)
+    scan(scanner, root, subdirRelative, media)
 
 if __name__ == '__main__':
   media = []
-  scan_all(sys.argv[1], "", media)
+
+  scanner = __import__(sys.argv[1])
+  scan(scanner, sys.argv[2], "", media)
   for m in media:
     print m
