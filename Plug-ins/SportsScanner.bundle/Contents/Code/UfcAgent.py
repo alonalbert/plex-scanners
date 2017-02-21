@@ -1,7 +1,8 @@
+import re
 import Wikipedia
 
 class UfcAgent(object):
-  NAME = 'UFC'
+  REGEX = re.compile('^ufc', re.IGNORECASE)
 
   def __init__(self, log):
     if log is None:
@@ -9,18 +10,18 @@ class UfcAgent(object):
     else:
       self.log = log
 
-  def getShowMetadata(self):
+  def getShowMetadata(self, title):
     return {
       'poster': 'ufc-poster.jpg',
       'background': 'ufc-background.jpg'
     }
 
-  def getSeasonMetadata(self, season):
+  def getSeasonMetadata(self, title, season):
     return {
       'poster': 'ufc-poster.jpg',
     }
 
-  def getEpisodeMetadata(self, season, episode):
+  def getEpisodeMetadata(self, title, season, episode):
     info = Wikipedia.getInfo('UFC+%s' % episode)
     imageUrl = Wikipedia.getImageUrl(info['image'])
     return {

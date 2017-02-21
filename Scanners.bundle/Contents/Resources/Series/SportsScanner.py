@@ -29,14 +29,38 @@ class UfcHandler(RegexHandler):
       return None
     episode = m.group('episode')
     title = m.group('title')
-    if year is None:
+    if year is None and os.path.exists(file):
       year = getYearFromFile(file)
 
     return Media.Episode(show, year, episode, title, year)
 
+class F1Handler(RegexHandler):
+  WEEKEND_BUNDLE_RE = re.compile('^(.*).formula1.(?P<year>\d+).r(?P<round>\d+).(?P<name>.*).Gran.Prix.(?P<show>.*)', re.IGNORECASE)
+
+  def getRegexs(self):
+    return [
+      'Formula1.*',
+    ]
+
+  def handle(self, match, file):
+    basename = os.path.splitext(file)[0]
+    m = self.WEEKEND_BUNDLE_RE.match(basename)
+    if m:
+      year = m.group('year')
+      round = m.group('round')
+      name = m.group('name') + ' Gran Prix'
+      show = m.group('show').replace('.', ' ')
+      if show.startswith('Ted') and show.endswith('Notebook'):
+        show = "Ted's Qualifying Notebook"
+      if not show.startswith('F1'):
+        show = 'F1 ' + show
+      return Media.Episode(show, year, round, name, year)
+
+
 
 REGEX_HANDLERS = [
   UfcHandler(),
+  F1Handler(),
 ]
 
 def handle(file):
@@ -52,6 +76,10 @@ def Scan(path, files, mediaList, subdirs, language=None, root=None):
   # Scan for video files.
   print files
   VideoFiles.Scan(path, files, mediaList, subdirs)
+  scanFiles(files, mediaList)
+
+
+def scanFiles(files, mediaList):
   for file in files:
     show = handle(file)
     if show is not None:

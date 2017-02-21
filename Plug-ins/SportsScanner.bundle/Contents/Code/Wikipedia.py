@@ -13,7 +13,6 @@ def getFirst(map):
       return value
 
 def getInfo(title):
-
   pageInfo = json.loads(Common.urlopen(WIKI_PAGEINFO + title).read())
   pages = pageInfo['query']['pages']
   page = getFirst(pages)
@@ -28,6 +27,14 @@ def getInfo(title):
 
   map['extract'] = CLEAN_HTML_REGEX.sub('', page['extract'])
   return map
+
+def getContent(title):
+  pageInfo = json.loads(Common.urlopen(WIKI_PAGEINFO + title).read())
+  pages = pageInfo['query']['pages']
+  page = getFirst(pages)
+
+  return page['revisions'][0]['*']
+
 
 def getImageUrl(image):
   imageInfo = json.loads(Common.urlopen(WIKI_IMAGEINFO + image).read())

@@ -1,5 +1,6 @@
 import inspect
 from UfcAgent import UfcAgent
+from F1Agent import F1Agent
 import re
 from Framework.objects import MetadataSearchResult
 
@@ -20,9 +21,10 @@ def getImage(image, isThumb=False):
   return Proxy.Media(image)
 
 
-AGENTS = {
-  UfcAgent.NAME: UfcAgent(Log),
-}
+AGENTS = [
+  UfcAgent(Log),
+  F1Agent(Log),
+]
 
 class SportsScannerAgentTVShows(Agent.TV_Shows):
   name = 'Sports Shows'
@@ -35,12 +37,17 @@ class SportsScannerAgentTVShows(Agent.TV_Shows):
   def update(self, metadata, media, lang):
     title = media.title
     Log("Updating " + title)
-    if title not in AGENTS:
+
+    agent = None
+    for ag in AGENTS:
+      if ag.REGEX.match(title):
+        agent = ag
+        break
+    if agent is None:
       Log("No match found for " + title)
       return
 
-    agent = AGENTS[title]
-    data = agent.getShowMetadata()
+    data = agent.getShowMetadata(title)
     poster = data['poster']
     if poster not in metadata.posters:
       metadata.posters[poster] = getImage(poster)
@@ -52,19 +59,23 @@ class SportsScannerAgentTVShows(Agent.TV_Shows):
     for season in media.children:
       seasonIndex = season.index
       seasonMetadata = metadata.seasons[seasonIndex]
-      poster = agent.getSeasonMetadata(seasonIndex)['poster']
+      poster = agent.getSeasonMetadata(title, seasonIndex)['poster']
       if poster not in seasonMetadata.posters:
         seasonMetadata.posters[poster] = getImage(poster)
 
       for episode in season.children:
         episodeIndex = episode.index
         episodeMetadata = seasonMetadata.episodes[episodeIndex]
-        data = agent.getEpisodeMetadata(seasonIndex, episodeIndex)
-        thumb = data['thumb']
-        if thumb not in episodeMetadata.thumbs:
-          episodeMetadata.thumbs[thumb] = getImage(thumb, True)
-        episodeMetadata.title = data['title']
-        episodeMetadata.summary = data['summary']
+        data = agent.getEpisodeMetadata(title, seasonIndex, episodeIndex)
+
+        if 'thumb' in data:
+          thumb = data['thumb']
+          if thumb not in episodeMetadata.thumbs:
+            episodeMetadata.thumbs[thumb] = getImage(thumb, True)
+        if 'title' in data:
+          episodeMetadata.title = data['title']
+        if 'summary' in data:
+          episodeMetadata.summary = data['summary']
 
     metadata.title = title
 
