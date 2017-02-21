@@ -11,12 +11,13 @@ class UfcAgent(object):
 
   def getShowMetadata(self):
     return {
-      'poster': 'ufc-portrait.jpg',
+      'poster': 'ufc-poster.jpg',
+      'background': 'ufc-background.jpg'
     }
 
   def getSeasonMetadata(self, season):
     return {
-      'poster': 'ufc-portrait.jpg',
+      'poster': 'ufc-poster.jpg',
     }
 
   def getEpisodeMetadata(self, season, episode):

@@ -3,11 +3,16 @@ from UfcAgent import UfcAgent
 import re
 from Framework.objects import MetadataSearchResult
 
+PAD_THUMBNAIL = '%s://rsz.io/%s?w=500&h=280&mode=pad'
 
-def getImage(image):
+
+def getImage(image, isThumb=False):
   if image is None:
     return None
   if image.lower().startswith("http"):
+    if isThumb:
+      i = image.index(':')
+      image = PAD_THUMBNAIL % (image[0:i], image[i + 3:])
     image = HTTP.Request(image).content
   else:
     image = Resource.Load(image)
@@ -35,21 +40,29 @@ class SportsScannerAgentTVShows(Agent.TV_Shows):
       return
 
     agent = AGENTS[title]
-    poster = agent.getShowMetadata()['poster']
-    metadata.posters[poster] = getImage(poster)
+    data = agent.getShowMetadata()
+    poster = data['poster']
+    if poster not in metadata.posters:
+      metadata.posters[poster] = getImage(poster)
+    if 'background' in data:
+      background = data['background']
+      if background not in metadata.art:
+        metadata.art[background] = getImage(background)
 
     for season in media.children:
       seasonIndex = season.index
       seasonMetadata = metadata.seasons[seasonIndex]
       poster = agent.getSeasonMetadata(seasonIndex)['poster']
-      seasonMetadata.posters[poster] = getImage(poster)
+      if poster not in seasonMetadata.posters:
+        seasonMetadata.posters[poster] = getImage(poster)
 
       for episode in season.children:
         episodeIndex = episode.index
         episodeMetadata = seasonMetadata.episodes[episodeIndex]
         data = agent.getEpisodeMetadata(seasonIndex, episodeIndex)
         thumb = data['thumb']
-        episodeMetadata.thumbs[thumb] = getImage(thumb)
+        if thumb not in episodeMetadata.thumbs:
+          episodeMetadata.thumbs[thumb] = getImage(thumb, True)
         episodeMetadata.title = data['title']
         episodeMetadata.summary = data['summary']
 
