@@ -45,6 +45,11 @@ class F1Agent(object):
         'poster': 'f1-race.jpg',
         'background': 'f1-background-2.jpg'
       }
+    elif title == 'F1 Qualifying':
+      return {
+        'poster': 'f1-qualifying.jpg',
+        'background': 'f1-background-3.jpg'
+      }
     else:
       return {}
 
