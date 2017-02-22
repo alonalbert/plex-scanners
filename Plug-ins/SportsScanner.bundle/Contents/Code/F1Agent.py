@@ -1,8 +1,17 @@
 import re
 
+
 class F1Agent(object):
   REGEX = re.compile('^f1', re.IGNORECASE)
+  SESSION_RE = re.compile('f1 (?P<extra>extras)? (?P<round>\d\d) (?P<location>[a-z ]+)$', re.IGNORECASE)
+
   PARTS = {
+    1: "The F1 Report",
+    2: "Driver Press Conference",
+    3: "Paddock Uncut",
+    4: "Ted's Qualifying Notebook",
+    5: "Team Principal Press Conference",
+    6: "The F1 Show",
     11: "Practice One",
     12: "Practice Two",
     13: "Practice Three",
@@ -13,30 +22,6 @@ class F1Agent(object):
     32: "Race",
     33: "Post Race",
   }
-  LOCATIONS = {
-    '2017' : [
-      'Australia',
-      'China',
-      'Bahrain',
-      'Russia',
-      'Spain',
-      'Monaco',
-      'Canada',
-      'Azerbaijan',
-      'Austria',
-      'Great Britain',
-      'Hungary',
-      'Belgium',
-      'Italy',
-      'Singapore',
-      'Malaysia',
-      'Japan',
-      'United States',
-      'Mexico',
-      'Brazil',
-      'Abu Dhabi',
-    ]
-  }
 
   def __init__(self, log):
     if log is None:
@@ -45,16 +30,19 @@ class F1Agent(object):
       self.log = log
 
   def getShowMetadata(self, title):
-    if title == 'F1 Show':
-      return {
-        'poster': 'f1-show-poster.jpg',
-        'background': 'f1-background-1.jpg'
-      }
-    elif title == 'F1':
-      return {
-        'poster': 'f1-race.jpg',
-        'background': 'f1-background-2.jpg'
-      }
+    match = self.SESSION_RE.match(title)
+    if match:
+      location = match.group('location')
+      if match.group('extra'):
+        return {
+          'poster': 'f1-show-poster.jpg',
+          'background': 'f1-background-1.jpg'
+          }
+      else:
+        return {
+          'poster': 'f1-race.jpg',
+          'background': self.getTrackImage(location)
+          }
     else:
       return {}
 
@@ -63,18 +51,19 @@ class F1Agent(object):
 
   def getEpisodeMetadata(self, title, season, episode):
     ep = int(episode)
-    if title == 'F1':
+    match = self.SESSION_RE.match(title)
+    if match:
+      location = match.group('location')
       round = ep / 100
       part = ep % 100
-      location = self.LOCATIONS[season][round]
-      partName = self.PARTS[part]
-      title = location + ' ' + partName
+      title = self.PARTS[part]
     else:
-      location = self.LOCATIONS[season][ep]
-      title = location
+      return {}
 
     return {
-      'title' : title,
-      'thumb' : 'f1-' + location.lower().replace(' ', '-') + '.png'
+      'title': title,
+      'thumb': self.getTrackImage(location)
     }
 
+  def getTrackImage(self, location):
+    return 'f1-' + location.lower().replace(' ', '-') + '.png'

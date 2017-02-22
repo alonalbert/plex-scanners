@@ -41,6 +41,33 @@ class F1Handler(RegexHandler):
   P3_RE = re.compile('(.*practice (three|3))|p1', re.IGNORECASE)
   Q_RE = re.compile('quali', re.IGNORECASE)
   RACE_RE = re.compile('race', re.IGNORECASE)
+  TED_RE = re.compile('ted.*qualifying.notebook', re.IGNORECASE)
+
+  LOCATIONS = {
+    '2017' : [
+      'Australia',
+      'China',
+      'Bahrain',
+      'Russia',
+      'Spain',
+      'Monaco',
+      'Canada',
+      'Azerbaijan',
+      'Austria',
+      'Great Britain',
+      'Hungary',
+      'Belgium',
+      'Italy',
+      'Singapore',
+      'Malaysia',
+      'Japan',
+      'United States',
+      'Mexico',
+      'Brazil',
+      'Abu Dhabi',
+    ]
+  }
+
   def getRegexs(self):
     return [
       'Formula1.*',
@@ -55,9 +82,12 @@ class F1Handler(RegexHandler):
       name = m.group('name') + ' Gran Prix'
       show = m.group('show').replace('.', ' ')
       show, part, title = self.getShowAndPart(show)
+      location = self.LOCATIONS[year][round]
+      show = '%s %02d %s' % (show, round, location)
       return Media.Episode(show, year, round * 100 + part, name + ' ' + title, year)
 
   def getShowAndPart(self, show):
+    lower = show.lower()
     if self.P1_RE.match(show):
       return 'F1', 11, 'Practice 1'
     elif self.P2_RE.match(show):
@@ -65,20 +95,31 @@ class F1Handler(RegexHandler):
     elif self.P3_RE.match(show):
       return 'F1', 13, 'Practice 3'
     elif self.Q_RE.match(show):
-      if 'pre' in show.lower():
+      if 'pre' in lower:
         return 'F1', 21, 'Pre Qualifying'
-      elif 'post' in show.lower():
+      elif 'post' in lower:
         return 'F1', 23, 'Post Qualifying'
       else:
         return 'F1', 22, 'Qualifying'
     elif self.RACE_RE.match(show):
-      if 'pre' in show.lower():
+      if 'pre' in lower:
         return 'F1', 31, 'Pre Race'
-      elif 'post' in show.lower():
+      elif 'post' in lower:
         return 'F1', 33, 'Post Race'
       else:
         return 'F1', 32, 'Race'
-
+    elif 'f1 report' in lower:
+      return 'F1 Extras', 1, 'The F1 Report'
+    elif 'driver press' in lower:
+      return 'F1 Extras', 2, 'Driver Press Conference'
+    elif 'paddock' in lower:
+      return 'F1 Extras', 3, 'Paddock Uncut'
+    elif self.TED_RE.match(show):
+      return 'F1 Extras', 4, "Ted's Qualifying Notebook"
+    elif 'team principal' in lower:
+      return 'F1 Extras', 5, 'Team Principal Press Conference'
+    elif 'f1 show' in lower:
+      return 'F1 Extras', 6, 'The F1 Show'
     else:
       return (show, 1, '')
 
