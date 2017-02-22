@@ -7,7 +7,7 @@ def Log(str):
 if __name__ == '__main__':
   agent = F1Agent(Log)
 
-  print agent.getShowMetadata('F1 Show')
-  print agent.getSeasonMetadata('F1 Show', "2017")
-  print agent.getEpisodeMetadata('F1 Show', "2017", "12")
+  print agent.getShowMetadata('F1')
+  print agent.getSeasonMetadata('F1', "2017")
+  print agent.getEpisodeMetadata('F1', "2017", "1311")
 

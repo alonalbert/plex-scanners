@@ -25,29 +25,32 @@ if __name__ == '__main__':
   scanner = __import__(sys.argv[1])
   # scan(scanner, sys.argv[2], "", media)
   scanner.scanFiles([
-    '01.Formula1.2016.R13.Belgian.Gran.Prix.F1.Report.ts',
-    '02.Formula1.2016.R13.Belgian.Gran.Prix.Driver.Press.Conference.ts',
-    '03.Formula1.2016.R13.Belgian.Gran.Prix.Paddock.Uncut.ts',
+    # '01.Formula1.2016.R13.Belgian.Gran.Prix.F1.Report.ts',
+    # '02.Formula1.2016.R13.Belgian.Gran.Prix.Driver.Press.Conference.ts',
+    # '03.Formula1.2016.R13.Belgian.Gran.Prix.Paddock.Uncut.ts',
     '04.Formula1.2016.R13.Belgian.Gran.Prix.Free.Practice.One.ts',
     '05.Formula1.2016.R13.Belgian.Gran.Prix.Free.Practice.Two.ts',
-    '06.Formula1.2016.R13.Belgian.Gran.Prix.Team.Principals.Press.Conference.ts',
+    # '06.Formula1.2016.R13.Belgian.Gran.Prix.Team.Principals.Press.Conference.ts',
     '07.Formula1.2016.R13.Belgian.Gran.Prix.F1.Show.ts',
     '08.Formula1.2016.R13.Belgian.Gran.Prix.Free.Practice.Three.ts',
     '09.Formula1.2016.R13.Belgian.Gran.Prix.Qualifying.ts',
-    '10.Formula1.2016.R13.Belgian.Gran.Prix.Ted''s.Qualifying.Notebook.ts',
-    '11.Formula1.2016.R13.Belgian.Gran.Prix.Race.ts',
-
-    '01.Formula1.2016.R12.German.Gran.Prix.F1.Report.mkv',
-    '02.Formula1.2016.R12.German.Gran.Prix.Driver.Press.Conference.ts',
-    '03.Formula1.2016.R12.German.Gran.Prix.Paddock.Uncut.ts',
-    '04.Formula1.2016.R12.German.Gran.Prix.Free.Practice.One.ts',
-    '05.Formula1.2016.R12.German.Gran.Prix.Free.Practice.Two.ts',
-    '06.Formula1.2016.R12.German.Gran.Prix.Team.Principals.Press.Conference.ts',
-    '07.Formula1.2016.R12.German.Gran.Prix.F1.Show.ts',
-    '08.Formula1.2016.R12.German.Gran.Prix.Free.Practice.Three.ts',
-    '09.Formula1.2016.R12.German.Gran.Prix.Qualifying.ts',
-    '10.Formula1.2016.R12.German.Gran.Prix.Ted, Qualifying.Notebook.ts',
-    '11.Formula1.2016.R12.German.Gran.Prix.Race.ts',
+    '09a.Formula1.2016.R13.Belgian.Gran.Prix.Qualifying.Post.ts',
+    # '10.Formula1.2016.R13.Belgian.Gran.Prix.Ted''s.Qualifying.Notebook.ts',
+    '11a.Formula1.2016.R13.Belgian.Gran.Prix.Race.Pre.ts',
+    '11b.Formula1.2016.R13.Belgian.Gran.Prix.Race.ts',
+    '11c.Formula1.2016.R13.Belgian.Gran.Prix.Race.Post.ts',
+    #
+    # '01.Formula1.2016.R12.German.Gran.Prix.F1.Report.mkv',
+    # '02.Formula1.2016.R12.German.Gran.Prix.Driver.Press.Conference.ts',
+    # '03.Formula1.2016.R12.German.Gran.Prix.Paddock.Uncut.ts',
+    # '04.Formula1.2016.R12.German.Gran.Prix.Free.Practice.One.ts',
+    # '05.Formula1.2016.R12.German.Gran.Prix.Free.Practice.Two.ts',
+    # '06.Formula1.2016.R12.German.Gran.Prix.Team.Principals.Press.Conference.ts',
+    # '07.Formula1.2016.R12.German.Gran.Prix.F1.Show.ts',
+    # '08.Formula1.2016.R12.German.Gran.Prix.Free.Practice.Three.ts',
+    # '09.Formula1.2016.R12.German.Gran.Prix.Qualifying.ts',
+    # '10.Formula1.2016.R12.German.Gran.Prix.Ted, Qualifying.Notebook.ts',
+    # '11.Formula1.2016.R12.German.Gran.Prix.Race.ts',
   ], media)
 
   shows = {}
@@ -65,7 +68,7 @@ if __name__ == '__main__':
     else:
       episodes = seasons[m.season]
 
-    episodes.append(m)
+    episodes.append('%s %s' % (m.episode, m.name))
 
   for show, seasons in shows.iteritems():
     print show
@@ -73,4 +76,4 @@ if __name__ == '__main__':
       print "  " + season
       episodes.sort()
       for episode in episodes:
-        print '    %s %s' % (episode.episode, episode.name)
+        print '    ' + episode

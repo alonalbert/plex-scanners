@@ -1,8 +1,18 @@
 import re
 
 class F1Agent(object):
-  REGEX = re.compile('^f1 ', re.IGNORECASE)
-
+  REGEX = re.compile('^f1', re.IGNORECASE)
+  PARTS = {
+    11: "Practice One",
+    12: "Practice Two",
+    13: "Practice Three",
+    21: "Pre Qualifying",
+    22: "Qualifying",
+    23: "Post Qualifying",
+    31: "Pre Race",
+    32: "Race",
+    33: "Post Race",
+  }
   LOCATIONS = {
     '2017' : [
       'Australia',
@@ -40,15 +50,10 @@ class F1Agent(object):
         'poster': 'f1-show-poster.jpg',
         'background': 'f1-background-1.jpg'
       }
-    elif title == 'F1 Race':
+    elif title == 'F1':
       return {
         'poster': 'f1-race.jpg',
         'background': 'f1-background-2.jpg'
-      }
-    elif title == 'F1 Qualifying':
-      return {
-        'poster': 'f1-qualifying.jpg',
-        'background': 'f1-background-3.jpg'
       }
     else:
       return {}
@@ -57,9 +62,19 @@ class F1Agent(object):
     return self.getShowMetadata(title)
 
   def getEpisodeMetadata(self, title, season, episode):
-    location = self.LOCATIONS[season][int(episode) - 1]
+    ep = int(episode)
+    if title == 'F1':
+      round = ep / 100
+      part = ep % 100
+      location = self.LOCATIONS[season][round]
+      partName = self.PARTS[part]
+      title = location + ' ' + partName
+    else:
+      location = self.LOCATIONS[season][ep]
+      title = location
+
     return {
-      'title' : location + ' Grand Prix',
+      'title' : title,
       'thumb' : 'f1-' + location.lower().replace(' ', '-') + '.png'
     }
 

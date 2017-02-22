@@ -36,7 +36,11 @@ class UfcHandler(RegexHandler):
 
 class F1Handler(RegexHandler):
   WEEKEND_BUNDLE_RE = re.compile('^(.*).formula1.(?P<year>\d+).r(?P<round>\d+).(?P<name>.*).Gran.Prix.(?P<show>.*)', re.IGNORECASE)
-
+  P1_RE = re.compile('(.*practice (one|1))|p1', re.IGNORECASE)
+  P2_RE = re.compile('(.*practice (two|2))|p2', re.IGNORECASE)
+  P3_RE = re.compile('(.*practice (three|3))|p1', re.IGNORECASE)
+  Q_RE = re.compile('quali', re.IGNORECASE)
+  RACE_RE = re.compile('race', re.IGNORECASE)
   def getRegexs(self):
     return [
       'Formula1.*',
@@ -47,15 +51,40 @@ class F1Handler(RegexHandler):
     m = self.WEEKEND_BUNDLE_RE.match(basename)
     if m:
       year = m.group('year')
-      round = m.group('round')
+      round = int(m.group('round'))
       name = m.group('name') + ' Gran Prix'
       show = m.group('show').replace('.', ' ')
-      if show.startswith('Ted') and show.endswith('Notebook'):
-        show = "Ted's Qualifying Notebook"
-      if not show.startswith('F1'):
-        show = 'F1 ' + show
-      return Media.Episode(show, year, round, name, year)
+      show, part, title = self.getShowAndPart(show)
+      return Media.Episode(show, year, round * 100 + part, name + ' ' + title, year)
 
+  def getShowAndPart(self, show):
+    if self.P1_RE.match(show):
+      return 'F1', 11, 'Practice 1'
+    elif self.P2_RE.match(show):
+      return 'F1', 12, 'Practice 2'
+    elif self.P3_RE.match(show):
+      return 'F1', 13, 'Practice 3'
+    elif self.Q_RE.match(show):
+      if 'pre' in show.lower():
+        return 'F1', 21, 'Pre Qualifying'
+      elif 'post' in show.lower():
+        return 'F1', 23, 'Post Qualifying'
+      else:
+        return 'F1', 22, 'Qualifying'
+    elif self.RACE_RE.match(show):
+      if 'pre' in show.lower():
+        return 'F1', 31, 'Pre Race'
+      elif 'post' in show.lower():
+        return 'F1', 33, 'Post Race'
+      else:
+        return 'F1', 32, 'Race'
+
+    else:
+      return (show, 1, '')
+
+
+
+    pass
 
 
 REGEX_HANDLERS = [
