@@ -23,6 +23,7 @@ def scan(scanner, root, path, media):
 if __name__ == '__main__':
   media = []
   scanner = __import__(sys.argv[1])
+  # scan(scanner, sys.argv[2], "", media)
   scanner.scanFiles([
     '01.Formula1.2016.R13.Belgian.Gran.Prix.F1.Report.ts',
     '02.Formula1.2016.R13.Belgian.Gran.Prix.Driver.Press.Conference.ts',
@@ -48,7 +49,28 @@ if __name__ == '__main__':
     '10.Formula1.2016.R12.German.Gran.Prix.Ted, Qualifying.Notebook.ts',
     '11.Formula1.2016.R12.German.Gran.Prix.Race.ts',
   ], media)
-  # scan(scanner, sys.argv[2], "", media)
-  for m in media:
-    print '%s S%sE%s %s' % (m.show, m.season, m.episode, m.name)
 
+  shows = {}
+
+  for m in media:
+    if m.show not in shows:
+      seasons = {}
+      shows[m.show] = seasons
+    else:
+      seasons = shows[m.show]
+
+    if m.season not in seasons:
+      episodes = []
+      seasons[m.season] = episodes
+    else:
+      episodes = seasons[m.season]
+
+    episodes.append(m)
+
+  for show, seasons in shows.iteritems():
+    print show
+    for season, episodes in seasons.iteritems():
+      print "  " + season
+      episodes.sort()
+      for episode in episodes:
+        print '    %s %s' % (episode.episode, episode.name)
