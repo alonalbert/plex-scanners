@@ -1,3 +1,5 @@
+import urllib
+
 import Common
 import json
 import re
@@ -21,9 +23,10 @@ def getInfo(title):
   infoBox = contents[0:contents.index('\n}}\n')]
 
   map = {}
-  for line in infoBox.splitlines()[1:]:
-    match = INFOBOX_REGEX.match(line)
-    map[match.group('key')] = match.group('value')
+  for line in infoBox.splitlines():
+    if line.startswith('|'):
+      match = INFOBOX_REGEX.match(line)
+      map[match.group('key')] = match.group('value')
 
   map['extract'] = CLEAN_HTML_REGEX.sub('', page['extract'])
   return map
@@ -37,7 +40,7 @@ def getContent(title):
 
 
 def getImageUrl(image):
-  imageInfo = json.loads(Common.urlopen(WIKI_IMAGEINFO + image).read())
+  imageInfo = json.loads(Common.urlopen(WIKI_IMAGEINFO + urllib.quote_plus(image)).read())
   pages = imageInfo['query']['pages']
   page = getFirst(pages)
   return page['imageinfo'][0]['url']
