@@ -78,6 +78,8 @@ class F1Handler(RegexHandler):
     'Russia': 'Russia',
     'Spanish': 'Spain',
     'Spain': 'Spain',
+    'Monaco': 'Monaco',
+    'French': 'Monaco',
     'Canadian': 'Canada',
     'Canada': 'Canada',
     'Azerbaijanian': 'Azerbaijan',
@@ -107,7 +109,8 @@ class F1Handler(RegexHandler):
 
   def getRegexs(self):
     return [
-      'Formula.?1.*',
+      '^Formula.?1.*',
+      '^F1.*',
     ]
 
   def handle(self, match, file):
@@ -160,17 +163,17 @@ class F1Handler(RegexHandler):
         return 'F1', 33, 'Post Race'
       else:
         return 'F1', 32, 'Race'
-    elif 'f1 report' in lower:
+    elif 'f1.report' in lower:
       return 'F1 Extras', 1, 'The F1 Report'
-    elif 'driver press' in lower:
+    elif re.search('driver(s)?.press', lower):
       return 'F1 Extras', 2, 'Driver Press Conference'
     elif 'paddock' in lower:
       return 'F1 Extras', 3, 'Paddock Uncut'
     elif self.TED_RE.search(show):
       return 'F1 Extras', 4, "Ted's Qualifying Notebook"
-    elif 'team principal' in lower:
+    elif re.search('team.principal', lower):
       return 'F1 Extras', 5, 'Team Principal Press Conference'
-    elif 'f1 show' in lower:
+    elif re.search('f1.show', lower):
       return 'F1 Extras', 6, 'The F1 Show'
     else:
       if 'pre' in lower:
@@ -192,7 +195,7 @@ def handle(file):
   basename = os.path.basename(file)
   for handler in REGEX_HANDLERS:
     for regex in handler.getRegexs():
-      match = re.search(regex, file, re.IGNORECASE)
+      match = re.search(regex, basename, re.IGNORECASE)
       if match:
         return handler.handle(match, file)
 
