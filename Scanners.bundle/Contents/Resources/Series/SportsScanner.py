@@ -27,8 +27,11 @@ class UfcHandler(RegexHandler):
     m = re.match(self.PATTERN, name, re.IGNORECASE)
     if not m:
       return None
-    episode = m.group('episode')
     title = m.group('title')
+    lower = title.lower()
+    episode = m.group('episode') * 10
+    if
+
     if year is None and os.path.exists(file):
       year = getYearFromFile(file)
 
