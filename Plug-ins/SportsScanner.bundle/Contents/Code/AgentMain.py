@@ -5,11 +5,11 @@ def Log(str):
   print str
 
 if __name__ == '__main__':
-  agent = F1Agent(Log)
+  agent = UfcAgent(Log)
 
-  title = 'F1 08 Azerbaijan'
+  title = 'Weigh In'
   print title
   print agent.getShowMetadata(title)
   print agent.getSeasonMetadata(title, "2017")
-  print agent.getEpisodeMetadata(title, "2017", "122")
+  print agent.getEpisodeMetadata(title, "2017", "2141")
 

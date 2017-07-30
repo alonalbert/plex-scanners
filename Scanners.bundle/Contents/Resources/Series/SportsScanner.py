@@ -29,8 +29,13 @@ class UfcHandler(RegexHandler):
       return None
     title = m.group('title')
     lower = title.lower()
-    episode = m.group('episode') * 10
-    if
+    episode = int(m.group('episode')) * 10
+    if "weigh" in lower:
+      episode += 1
+    elif "prelim" in lower:
+      episode += 2
+    else:
+      episode += 3
 
     if year is None and os.path.exists(file):
       year = getYearFromFile(file)
