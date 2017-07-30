@@ -22,11 +22,18 @@ class UfcAgent(object):
     }
 
   def getEpisodeMetadata(self, title, season, episode):
-    info = Wikipedia.getInfo('UFC+%s' % episode)
+    episodeNum = (int) (episode)
+    part = episodeNum % 10
+    info = Wikipedia.getInfo('UFC+%s' % (episodeNum / 10))
     imageUrl = Wikipedia.getImageUrl(info['image'])
+    name = info['name']
+    if part == 1:
+      name = "Weigh In - " + name
+    elif part == 2:
+      name = "Prelims - " + name
     return {
       'thumb': imageUrl,
-      'title': info['name'],
+      'title': name,
       'summary': info['extract'],
     }
 

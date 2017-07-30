@@ -35,6 +35,8 @@ class UfcHandler(RegexHandler):
     elif "prelim" in lower:
       episode += 2
     else:
+      if title == "":
+        title = "Fight"
       episode += 3
 
     if year is None and os.path.exists(file):
