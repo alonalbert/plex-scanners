@@ -100,7 +100,7 @@ class F1Handler(RegexHandler):
     'Great.Britain': 'Great Britain',
     'Hungarian': 'Hungary',
     'Hungary': 'Hungary',
-    'Belgium': 'Belgium',
+    'Belgian': 'Belgium',
     'Italian': 'Italy',
     'Italy': 'Italy',
     'Singapore': 'Singapore',
