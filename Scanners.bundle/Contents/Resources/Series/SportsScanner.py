@@ -56,6 +56,8 @@ class UfcfIGHTnIGHTHandler(RegexHandler):
     elif "prelim" in lower:
       episode += 2
     else:
+      if title == "":
+        title = "Fight"
       episode += 3
 
     if year is None and os.path.exists(file):
@@ -119,7 +121,7 @@ class F1Handler(RegexHandler):
     'Great.Britain': 'Great Britain',
     'Hungarian': 'Hungary',
     'Hungary': 'Hungary',
-    'Belgium': 'Belgium',
+    'Belgian': 'Belgium',
     'Italian': 'Italy',
     'Italy': 'Italy',
     'Singapore': 'Singapore',
