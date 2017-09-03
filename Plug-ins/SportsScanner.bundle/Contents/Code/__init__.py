@@ -1,5 +1,6 @@
 import inspect
 from UfcAgent import UfcAgent
+from UfcFightNightAgent import UfcFightNightAgent
 from F1Agent import F1Agent
 import re
 from Framework.objects import MetadataSearchResult
@@ -22,6 +23,7 @@ def getImage(image, isThumb=False):
 
 
 AGENTS = [
+  UfcFightNightAgent(Log),
   UfcAgent(Log),
   F1Agent(Log),
 ]

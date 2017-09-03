@@ -14,11 +14,32 @@ class RegexHandler(object):
 
 
 class UfcHandler(RegexHandler):
-  PATTERN = 'ufc (?P<episode>\d+) ?(?P<title>.*)?'
+  PATTERN = 'ufc fight night (?P<episode>\d+)'
 
   def getRegexs(self):
     return [
       'ufc',
+    ]
+
+  def handle(self, match, file):
+    show = 'UFC Fight Night'
+    name, year = VideoFiles.CleanName(os.path.basename(file))
+    m = re.match(self.PATTERN, name, re.IGNORECASE)
+    if not m:
+      return None
+    episode = int(m.group('episode'))
+
+    if year is None and os.path.exists(file):
+      year = getYearFromFile(file)
+
+    return Media.Episode(show, year, episode, episode, year)
+
+class UfcfIGHTnIGHTHandler(RegexHandler):
+  PATTERN = 'ufc (?P<episode>\d+) ?(?P<title>.*)?'
+
+  def getRegexs(self):
+    return [
+      'ufc.fight.night',
     ]
 
   def handle(self, match, file):
