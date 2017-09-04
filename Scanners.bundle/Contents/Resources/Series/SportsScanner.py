@@ -13,12 +13,12 @@ class RegexHandler(object):
     return []
 
 
-class UfcHandler(RegexHandler):
+class UfcFightNightHandler(RegexHandler):
   PATTERN = 'ufc fight night (?P<episode>\d+)'
 
   def getRegexs(self):
     return [
-      'ufc',
+      'ufc.fight.night',
     ]
 
   def handle(self, match, file):
@@ -34,12 +34,12 @@ class UfcHandler(RegexHandler):
 
     return Media.Episode(show, year, episode, episode, year)
 
-class UfcfIGHTnIGHTHandler(RegexHandler):
+class UfcHandler(RegexHandler):
   PATTERN = 'ufc (?P<episode>\d+) ?(?P<title>.*)?'
 
   def getRegexs(self):
     return [
-      'ufc.fight.night',
+      'ufc',
     ]
 
   def handle(self, match, file):
@@ -218,6 +218,7 @@ class F1Handler(RegexHandler):
 
 
 REGEX_HANDLERS = [
+  UfcFightNightHandler(),
   UfcHandler(),
   F1Handler(),
 ]
