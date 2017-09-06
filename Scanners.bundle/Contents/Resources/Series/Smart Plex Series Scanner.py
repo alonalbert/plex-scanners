@@ -1,16 +1,25 @@
-#
+''#
 # Copyright (c) 2010 Plex Development Team. All rights reserved.
 #
 import re, os, os.path
 import Media, VideoFiles, Stack, Utils
 from mp4file import mp4file, atomsearch
 
+# Smart Scanner Changes Start ####################################################
+date_regexps_top_level = [
+'(?P<show>.*?)(?P<year>[0-9]{4})[^0-9a-zA-Z]+(?P<month>[0-9]{2})[^0-9a-zA-Z]+(?P<day>[0-9]{2})([^0-9]|$)', # 2009-02-10
+'(?P<show>.*?)(?P<month>[0-9]{2})[^0-9a-zA-Z]+(?P<day>[0-9]{2})[^0-9a-zA-Z(]+(?P<year>[0-9]{4})([^0-9a-zA-Z]|$)', # 02-10-2009
+]
+# Smart Scanner Changes End   ####################################################
 episode_regexps = [
     '(?P<show>.*?)[sS](?P<season>[0-9]+)[\._ ]*[eE](?P<ep>[0-9]+)[\._ ]*([- ]?[sS](?P<secondSeason>[0-9]+))?([- ]?[Ee+](?P<secondEp>[0-9]+))?', # S03E04-E05
     '(?P<show>.*?)[sS](?P<season>[0-9]{2})[\._\- ]+(?P<ep>[0-9]+)',                                                            # S03-03
     '(?P<show>.*?)([^0-9]|^)(?P<season>(19[3-9][0-9]|20[0-5][0-9]|[0-9]{1,2}))[Xx](?P<ep>[0-9]+)((-[0-9]+)?[Xx](?P<secondEp>[0-9]+))?',  # 3x03, 3x03-3x04, 3x03x04
+# Smart Scanner Changes Start ####################################################
+    '(?P<show>.*?)(?P<season>part)[\._\- ]?(?P<ep>[0-9]+)',  # Part1 (Miniseries, equivalent to S01E01)
+# Smart Scanner Changes End   ####################################################
     '(.*?)(^|[\._\- ])+(?P<season>sp)(?P<ep>[0-9]{2,3})([\._\- ]|$)+',  # SP01 (Special 01, equivalent to S00E01)
-    '(.*?)[^0-9a-z](?P<season>[0-9]{1,2})(?P<ep>[0-9]{2})([\.\-][0-9]+(?P<secondEp>[0-9]{2})([ \-_\.]|$)[\.\-]?)?([^0-9a-z%]|$)' # .602.
+  '(.*?)[^0-9a-z](?P<season>[0-9]{1,2})(?P<ep>[0-9]{2})([\.\-][0-9]+(?P<secondEp>[0-9]{2})([ \-_\.]|$)[\.\-]?)?([^0-9a-z%]|$)' # .602.
   ]
 
 date_regexps = [
@@ -41,7 +50,7 @@ ends_with_episode = ['[ ]*[0-9]{1,2}x[0-9]{1,3}$', '[ ]*S[0-9]+E[0-9]+$']
 
 # Look for episodes.
 def Scan(path, files, mediaList, subdirs, language=None, root=None):
-  
+  print('Path: "%s" files: %s mediaList: %s subdirs: %s root: %s' % (path, files, mediaList, subdirs, root))
   # Scan for video files.
   VideoFiles.Scan(path, files, mediaList, subdirs, root)
   
@@ -58,12 +67,15 @@ def Scan(path, files, mediaList, subdirs, language=None, root=None):
         for rx in episode_regexps[0:-1]:
           match = re.search(rx, file, re.IGNORECASE)
           if match:
-
             # Extract data.
             show = match.group('show') if match.groupdict().has_key('show') else ''
             season = match.group('season')
             if season.lower() == 'sp':
               season = 0
+              # Smart Scanner Changes Start ####################################################
+            elif season.lower() == 'part':
+              season = 1
+              # Smart Scanner Changes END ####################################################
             episode = int(match.group('ep'))
             endEpisode = episode
             if match.groupdict().has_key('secondEp') and match.group('secondEp'):
@@ -79,7 +91,23 @@ def Scan(path, files, mediaList, subdirs, language=None, root=None):
                 mediaList.append(tv_show)
       except Exception, e:
         pass
-  
+
+      # Smart Scanner Changes Start ####################################################
+      for rx in date_regexps_top_level:
+        match = re.search(rx, file)
+        if match:
+          show = match.group('show')
+          year = int(match.group('year'))
+          month = int(match.group('month'))
+          day = int(match.group('day'))
+          # Use the year as the season.
+          tv_show = Media.Episode(show, year, None, None, None)
+          tv_show.released_at = '%d-%02d-%02d' % (year, month, day)
+          tv_show.parts.append(i)
+          mediaList.append(tv_show)
+          break
+        # Smart Scanner Changes End   ####################################################
+
   elif len(paths) > 0 and len(paths[0]) > 0:
     done = False
         
@@ -100,7 +128,7 @@ def Scan(path, files, mediaList, subdirs, language=None, root=None):
             (show, year) = VideoFiles.CleanName(paths[0])
           else:
             (show, ignore) = VideoFiles.CleanName(show)
-            
+
           episode = int(episode)
           if len(endEpisode) > 0:
             endEpisode = int(endEpisode)
@@ -249,7 +277,7 @@ def Scan(path, files, mediaList, subdirs, language=None, root=None):
             file = re.sub(rx, ' ', file)
 
           file = re.sub(re.compile('\\b' + re.escape(show).replace('\\ ', '[ \-_.()+]+') + '\\b', re.IGNORECASE), 'SERIES ', file)
-          
+
           for rx in episode_regexps:
             
             match = re.search(rx, file, re.IGNORECASE)
