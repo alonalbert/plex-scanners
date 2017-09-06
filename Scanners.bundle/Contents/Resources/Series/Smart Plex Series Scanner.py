@@ -19,6 +19,7 @@ episode_regexps = [
     '(?P<show>.*?)(?P<season>part)[\._\- ]?(?P<ep>[0-9]+)',  # Part1 (Miniseries, equivalent to S01E01)
 # Smart Scanner Changes End   ####################################################
     '(.*?)(^|[\._\- ])+(?P<season>sp)(?P<ep>[0-9]{2,3})([\._\- ]|$)+',  # SP01 (Special 01, equivalent to S00E01)
+  '(?P<show>.*?)(?P<season>[0-9]{1,2})[\._ ]*(?P<ep>[0-9]{2})[\._ ]*([- ]?(?P<secondSeason>[0-9]{1,2}))?([- ]?(?P<secondEp>[0-9]{2}))?',  # 0304-05
   '(.*?)[^0-9a-z](?P<season>[0-9]{1,2})(?P<ep>[0-9]{2})([\.\-][0-9]+(?P<secondEp>[0-9]{2})([ \-_\.]|$)[\.\-]?)?([^0-9a-z%]|$)' # .602.
   ]
 
@@ -29,7 +30,7 @@ date_regexps = [
 
 standalone_episode_regexs = [
   '(.*?)( \(([0-9]+)\))? - ([0-9]+)+x([0-9]+)(-[0-9]+[Xx]([0-9]+))?( - (.*))?',  # Newzbin style, no _UNPACK_
-  '(.*?)( \(([0-9]+)\))?[Ss]([0-9]+)+[Ee]([0-9]+)(-[0-9]+[Xx]([0-9]+))?( - (.*))?'   # standard s00e00
+  '(.*?)( \(([0-9]+)\))?[Ss]([0-9]+)+[Ee]([0-9]+)(-[0-9]+[Xx]([0-9]+))?( - (.*))?',   # standard s00e00
   ]
   
 season_regex = '.*?(?P<season>[0-9]+)$' # folder for a season
