@@ -1,12 +1,13 @@
 from UfcAgent import UfcAgent
 from UfcFightNightAgent import UfcFightNightAgent
 from F1Agent import F1Agent
+from WsopAgent import  WsopAgent
 
 def Log(str):
   print str
 
 if __name__ == '__main__':
-  agent = UfcFightNightAgent(Log)
+  agent = WsopAgent(Log)
 
   title = '115'
   print title
