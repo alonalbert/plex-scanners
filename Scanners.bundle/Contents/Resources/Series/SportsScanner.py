@@ -27,7 +27,11 @@ class UfcFightNightHandler(RegexHandler):
     m = re.match(self.PATTERN, name, re.IGNORECASE)
     if not m:
       return None
-    episode = int(m.group('episode'))
+    episode = int(m.group('episode')) * 10
+    if 'prelim' in name.lower():
+      episode += 1
+    else:
+      episode += 2
 
     if year is None and os.path.exists(file):
       year = getYearFromFile(file)

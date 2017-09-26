@@ -49,6 +49,10 @@ ends_with_number = '.*([0-9]{1,2})$'
 
 ends_with_episode = ['[ ]*[0-9]{1,2}x[0-9]{1,3}$', '[ ]*S[0-9]+E[0-9]+$']
 
+show_map = {
+  'stephen.colbert.*': 'The Late Show with Stephan Colbert',
+}
+
 # Look for episodes.
 def Scan(path, files, mediaList, subdirs, language=None, root=None):
   print('Path: "%s" files: %s mediaList: %s subdirs: %s root: %s' % (path, files, mediaList, subdirs, root))
@@ -63,8 +67,32 @@ def Scan(path, files, mediaList, subdirs, language=None, root=None):
   
     # Run the select regexps we allow at the top level.
     for i in files:
+      file = os.path.basename(i)
+      found = False
+      for rx in date_regexps_top_level:
+        match = re.search(rx, file)
+        if match:
+          show = match.group('show')
+          for rx1, name in show_map.iteritems():
+            if re.match(rx1, show):
+              show = name
+              break
+
+          year = int(match.group('year'))
+          month = int(match.group('month'))
+          day = int(match.group('day'))
+          # Use the year as the season.
+          tv_show = Media.Episode(show, year, None, None, None)
+          tv_show.released_at = '%d-%02d-%02d' % (year, month, day)
+          tv_show.parts.append(i)
+          mediaList.append(tv_show)
+          found = True
+          break
+
+      if found:
+        continue
+
       try:
-        file = os.path.basename(i)
         for rx in episode_regexps[0:-1]:
           match = re.search(rx, file, re.IGNORECASE)
           if match:
@@ -92,22 +120,6 @@ def Scan(path, files, mediaList, subdirs, language=None, root=None):
                 mediaList.append(tv_show)
       except Exception, e:
         pass
-
-      # Smart Scanner Changes Start ####################################################
-      for rx in date_regexps_top_level:
-        match = re.search(rx, file)
-        if match:
-          show = match.group('show')
-          year = int(match.group('year'))
-          month = int(match.group('month'))
-          day = int(match.group('day'))
-          # Use the year as the season.
-          tv_show = Media.Episode(show, year, None, None, None)
-          tv_show.released_at = '%d-%02d-%02d' % (year, month, day)
-          tv_show.parts.append(i)
-          mediaList.append(tv_show)
-          break
-        # Smart Scanner Changes End   ####################################################
 
   elif len(paths) > 0 and len(paths[0]) > 0:
     done = False
