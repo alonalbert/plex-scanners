@@ -6,12 +6,13 @@ class F1Agent(object):
   SESSION_RE = re.compile('f1 (?P<extra>extras )?(?P<round>\d\d) (?P<location>[a-z ]+)$', re.IGNORECASE)
 
   PARTS = {
-    1: "The F1 Report",
-    2: "Driver Press Conference",
-    3: "Paddock Uncut",
-    4: "Ted's Qualifying Notebook",
-    5: "Team Principal Press Conference",
-    6: "The F1 Show",
+    1: "Inside Line",
+    2: "The F1 Report",
+    3: "Driver Press Conference",
+    4: "Paddock Uncut",
+    5: "Ted's Qualifying Notebook",
+    6: "Team Principal Press Conference",
+    7: "The F1 Show",
     11: "Practice One",
     12: "Practice Two",
     13: "Practice Three",

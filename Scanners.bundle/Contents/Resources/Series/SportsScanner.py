@@ -28,15 +28,21 @@ class UfcFightNightHandler(RegexHandler):
     if not m:
       return None
     episode = int(m.group('episode')) * 10
-    if 'prelim' in name.lower():
+    title = ''
+    if 'early' in name.lower():
       episode += 1
-    else:
+      title = 'Early Prelims'
+    elif 'prelim' in name.lower():
       episode += 2
+      title = 'Prelims'
+    else:
+      episode += 3
+      title = 'Main Event'
 
     if year is None and os.path.exists(file):
       year = getYearFromFile(file)
 
-    return Media.Episode(show, year, episode, episode, year)
+    return Media.Episode(show, year, episode, title, year)
 
 class WsopHandler(RegexHandler):
   PATTERN = 'world.series.of.poker.(?P<year>\d{4}).(?P<title>.*)'
@@ -214,7 +220,7 @@ class F1Handler(RegexHandler):
       return 'F1', 12, 'Practice 2'
     elif self.P3_RE.search(show):
       return 'F1', 13, 'Practice 3'
-    elif self.Q_RE.search(show):
+    elif self.Q_RE.search(show) and not self.TED_RE.search(show):
       if 'pre' in lower:
         return 'F1', 21, 'Pre Qualifying'
       elif 'post' in lower:
@@ -228,18 +234,20 @@ class F1Handler(RegexHandler):
         return 'F1', 33, 'Post Race'
       else:
         return 'F1', 32, 'Race'
+    elif 'inside.line' in lower:
+      return 'F1 Extras', 1, 'Inside Line'
     elif 'f1.report' in lower:
-      return 'F1 Extras', 1, 'The F1 Report'
+      return 'F1 Extras', 2, 'The F1 Report'
     elif re.search('driver(s)?.press', lower):
-      return 'F1 Extras', 2, 'Driver Press Conference'
+      return 'F1 Extras', 3, 'Driver Press Conference'
     elif 'paddock' in lower:
-      return 'F1 Extras', 3, 'Paddock Uncut'
+      return 'F1 Extras', 4, 'Paddock Uncut'
     elif self.TED_RE.search(show):
-      return 'F1 Extras', 4, "Ted's Qualifying Notebook"
+      return 'F1 Extras', 5, "Ted's Qualifying Notebook"
     elif re.search('team.principal', lower):
-      return 'F1 Extras', 5, 'Team Principal Press Conference'
+      return 'F1 Extras', 6, 'Team Principal Press Conference'
     elif re.search('f1.show', lower):
-      return 'F1 Extras', 6, 'The F1 Show'
+      return 'F1 Extras', 7, 'The F1 Show'
     else:
       if 'pre' in lower:
         return 'F1', 31, 'Pre Race'

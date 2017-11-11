@@ -21,7 +21,17 @@ class UfcFightNightAgent(object):
       'poster': 'ufc-poster.jpg',
     }
 
+  PARTS = {
+    1: "Early Prelims",
+    2: "Prelims",
+    3: "Main Event",
+  }
+
   def getEpisodeMetadata(self, title, season, episode):
+    ep = int(episode)
+    part = ep % 10
+    title = self.PARTS[part]
+
     return {
       'thumb': 'ufc-poster.jpg',
       'title': title,
