@@ -171,7 +171,7 @@ class F1Handler(RegexHandler):
     'Mexico': 'Mexico',
     'Brazilian': 'Brazil',
     'Brazil': 'Brazil',
-    'Abu Dahbi': 'Abu Dahbi',
+    'Abu.Dhabi': 'Abu Dhabi',
   }
 
   def getRegexs(self):
