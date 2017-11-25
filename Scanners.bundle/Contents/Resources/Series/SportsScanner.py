@@ -101,6 +101,28 @@ class UfcHandler(RegexHandler):
 
     return Media.Episode(show, year, episode, title, year)
 
+class BellatorHandler(RegexHandler):
+  PATTERN = 'Bellator (?P<episode>\d+)'
+
+  def getRegexs(self):
+    return [
+      'bellator',
+    ]
+
+  def handle(self, match, file):
+    show = 'Bellator'
+    name, year = VideoFiles.CleanName(os.path.basename(file))
+    m = re.match(self.PATTERN, name, re.IGNORECASE)
+    if not m:
+      return None
+    episode = int(m.group('episode'))
+    title = 'Bellator %d' % episode
+
+    if year is None and os.path.exists(file):
+      year = getYearFromFile(file)
+
+    return Media.Episode(show, year, episode, title, year)
+
 class F1Handler(RegexHandler):
   WEEKEND_BUNDLE_RE = re.compile('^(.*).formula1.(?P<year>\d+).r(?P<round>\d+).(?P<name>.*).Gran.Prix.(?P<show>.*)', re.IGNORECASE)
   P1_RE = re.compile('(.*practice.(one|1))|p1', re.IGNORECASE)
@@ -264,6 +286,7 @@ REGEX_HANDLERS = [
   UfcHandler(),
   F1Handler(),
   WsopHandler(),
+  BellatorHandler(),
 ]
 
 def handle(file):

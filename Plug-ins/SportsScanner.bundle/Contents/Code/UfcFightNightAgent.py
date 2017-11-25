@@ -1,5 +1,4 @@
 import re
-import Wikipedia
 
 class UfcFightNightAgent(object):
   REGEX = re.compile('^ufc.fight.night', re.IGNORECASE)

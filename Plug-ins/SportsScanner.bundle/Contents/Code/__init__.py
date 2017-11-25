@@ -3,6 +3,7 @@ from UfcAgent import UfcAgent
 from UfcFightNightAgent import UfcFightNightAgent
 from F1Agent import F1Agent
 from WsopAgent import  WsopAgent
+from BellatorAgent import BellatorAgent
 import re
 from Framework.objects import MetadataSearchResult
 
@@ -28,6 +29,7 @@ AGENTS = [
   UfcAgent(Log),
   F1Agent(Log),
   WsopAgent(Log),
+  BellatorAgent(Log),
 ]
 
 class SportsScannerAgentTVShows(Agent.TV_Shows):
