@@ -1,6 +1,7 @@
 import inspect
 from UfcAgent import UfcAgent
 from UfcFightNightAgent import UfcFightNightAgent
+from UfcOnFoxAgent import UfcOnFoxAgent
 from F1Agent import F1Agent
 from WsopAgent import  WsopAgent
 from BellatorAgent import BellatorAgent
@@ -26,6 +27,7 @@ def getImage(image, isThumb=False):
 
 AGENTS = [
   UfcFightNightAgent(Log),
+  UfcOnFoxAgent(Log),
   UfcAgent(Log),
   F1Agent(Log),
   WsopAgent(Log),
