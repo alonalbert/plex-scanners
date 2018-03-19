@@ -44,6 +44,37 @@ class UfcFightNightHandler(RegexHandler):
 
     return Media.Episode(show, year, episode, title, year)
 
+class UfcOnFoxHandler(RegexHandler):
+  PATTERN = 'ufc on fox (?P<episode>\d+)'
+
+  def getRegexs(self):
+    return [
+      'ufc.on.fox',
+    ]
+
+  def handle(self, match, file):
+    show = 'UFC On Fox'
+    name, year = VideoFiles.CleanName(os.path.basename(file))
+    m = re.match(self.PATTERN, name, re.IGNORECASE)
+    if not m:
+      return None
+    episode = int(m.group('episode')) * 10
+    title = ''
+    if 'early' in name.lower():
+      episode += 1
+      title = 'Early Prelims'
+    elif 'prelim' in name.lower():
+      episode += 2
+      title = 'Prelims'
+    else:
+      episode += 3
+      title = 'Main Event'
+
+    if year is None and os.path.exists(file):
+      year = getYearFromFile(file)
+
+    return Media.Episode(show, year, episode, title, year)
+
 class WsopHandler(RegexHandler):
   PATTERN = 'world.series.of.poker.(?P<year>\d{4}).(?P<title>.*)'
 
@@ -283,6 +314,7 @@ class F1Handler(RegexHandler):
 
 REGEX_HANDLERS = [
   UfcFightNightHandler(),
+  UfcOnFoxHandler(),
   UfcHandler(),
   F1Handler(),
   WsopHandler(),
