@@ -19,8 +19,8 @@ episode_regexps = [
     '(?P<show>.*?)(?P<season>part)[\._\- ]?(?P<ep>[0-9]+)',  # Part1 (Miniseries, equivalent to S01E01)
 # Smart Scanner Changes End   ####################################################
     '(.*?)(^|[\._\- ])+(?P<season>sp)(?P<ep>[0-9]{2,3})([\._\- ]|$)+',  # SP01 (Special 01, equivalent to S00E01)
-#  '(?P<show>.*?)(?P<season>[0-9]{1,2})[\._ ]*(?P<ep>[0-9]{2})[\._ ]*([- ]?(?P<secondSeason>[0-9]{1,2}))?([- ]?(?P<secondEp>[0-9]{2}))?',  # 0304-05
-#  '(.*?)[^0-9a-z](?P<season>[0-9]{1,2})(?P<ep>[0-9]{2})([\.\-][0-9]+(?P<secondEp>[0-9]{2})([ \-_\.]|$)[\.\-]?)?([^0-9a-z%]|$)' # .602.
+    '(?P<show>.*?)(?P<season>[0-9]{1,2})[\._ ]*(?P<ep>[0-9]{2})[\._ ]+([- ]?(?P<secondSeason>[0-9]{1,2}))?([- ]?(?P<secondEp>[0-9]{2}))?',  # 0304-05
+    '(.*?)[^0-9a-z](?P<season>[0-9]{1,2})(?P<ep>[0-9]{2})([\.\-][0-9]+(?P<secondEp>[0-9]{2})([ \-_\.]|$)[\.\-]?)?([^0-9a-z%]|$)' # .602.
   ]
 
 date_regexps = [
@@ -57,7 +57,7 @@ show_map = {
 def Scan(path, files, mediaList, subdirs, language=None, root=None):
   print('Path: "%s" files: %s mediaList: %s subdirs: %s root: %s' % (path, files, mediaList, subdirs, root))
   # Scan for video files.
-  VideoFiles.Scan(path, files, mediaList, subdirs, root)
+  # VideoFiles.Scan(path, files, mediaList, subdirs, root)
   
   # Take top two as show/season, but require at least the top one.
   paths = Utils.SplitPath(path)
