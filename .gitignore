@@ -1,4 +1,4 @@
 /run/
 /save/
 *.pyc
-test-dir
+/test/
