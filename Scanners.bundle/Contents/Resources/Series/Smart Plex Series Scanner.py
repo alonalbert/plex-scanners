@@ -57,7 +57,7 @@ show_map = {
 def Scan(path, files, mediaList, subdirs, language=None, root=None):
   print('Path: "%s" files: %s mediaList: %s subdirs: %s root: %s' % (path, files, mediaList, subdirs, root))
   # Scan for video files.
-  # VideoFiles.Scan(path, files, mediaList, subdirs, root)
+  VideoFiles.Scan(path, files, mediaList, subdirs, root)
   
   # Take top two as show/season, but require at least the top one.
   paths = Utils.SplitPath(path)
