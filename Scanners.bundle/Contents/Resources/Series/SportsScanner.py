@@ -185,6 +185,34 @@ class F1Handler(RegexHandler):
       'Mexico',
       'Brazil',
       'Abu Dhabi',
+    ],
+    '2018' : [
+      'Australia',
+      'Bahrain',
+      'China',
+      'Azerbaijan',
+
+      'Spain',
+      'Monaco',
+      'Canada',
+      'France',
+
+      'Austria',
+      'Great Britain',
+      'Germany'
+      'Hungary',
+
+      'Belgium',
+      'Italy',
+      'Singapore',
+      'Russia',
+
+      'Japan',
+      'United States',
+      'Mexico',
+      'Brazil',
+
+      'Abu Dhabi',
     ]
   }
 
@@ -199,7 +227,7 @@ class F1Handler(RegexHandler):
     'Spanish': 'Spain',
     'Spain': 'Spain',
     'Monaco': 'Monaco',
-    'French': 'Monaco',
+    'French': 'France',
     'Canadian': 'Canada',
     'Canada': 'Canada',
     'Azerbaijanian': 'Azerbaijan',

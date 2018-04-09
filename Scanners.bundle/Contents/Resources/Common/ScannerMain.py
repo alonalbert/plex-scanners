@@ -40,7 +40,7 @@ if __name__ == '__main__':
     else:
       episodes = seasons[m.season]
 
-    episodes.append('%s %s' % (m.episode, m.name))
+    episodes.append('%s: %s %s' % (m.released_at, m.episode, m.name))
 
   for show in sorted(shows):
     seasons = shows[show]

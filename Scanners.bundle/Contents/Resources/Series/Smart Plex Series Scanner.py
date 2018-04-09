@@ -118,6 +118,12 @@ def Scan(path, files, mediaList, subdirs, language=None, root=None):
                 tv_show.display_offset = (ep-episode)*100/(endEpisode-episode+1)
                 tv_show.parts.append(i)
                 mediaList.append(tv_show)
+                found = True
+            if found:
+              break
+        if found:
+          continue
+
       except Exception, e:
         pass
 
