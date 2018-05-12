@@ -262,7 +262,8 @@ class F1Handler(RegexHandler):
     ]
 
   def handle(self, match, file):
-    basename = os.path.splitext(file)[0]
+    basename = os.path.basename(file)
+    print basename
     m = self.WEEKEND_BUNDLE_RE.match(basename)
     if m:
       year = m.group('year')
@@ -288,7 +289,7 @@ class F1Handler(RegexHandler):
 
         round = self.SCHEDULE[str(year)].index(location) + 1
         name = location + ' Gran Prix'
-        show, part, title = self.getShowAndPart(file)
+        show, part, title = self.getShowAndPart(basename)
 
         show = '%s %02d %s' % (show, round, location)
         return Media.Episode(show, year, round * 100 + part, name + ' ' + title, year)
