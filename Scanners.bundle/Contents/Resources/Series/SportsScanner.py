@@ -91,13 +91,29 @@ class WsopHandler(RegexHandler):
       return None
     year = int(m.group('year'))
     title = VideoFiles.CleanName(m.group('title'))[0]
-    if 'preview' in title.lower():
+    titleLower = title.lower()
+    if 'preview' in titleLower:
       episode = 0
-    else:
-      m = re.match('.*day (?P<day>\d+)', title, re.IGNORECASE)
+    elif "one drop" in titleLower:
+      m = re.match('.*part ?(?P<day>\d+)', title, re.IGNORECASE)
       if not m:
         return None
-      episode = int(m.group('day'))
+      day = int(m.group('day'))
+      episode = day * 10
+    elif "main event" in titleLower:
+      m = re.match('.*day ?(?P<day>\d+)(?P<part>[a-z]?)', title, re.IGNORECASE)
+      if not m:
+        return None
+      day = int(m.group('day'))
+      part = m.group('part')
+      if "final table" in titleLower:
+        episode = 200 + day * 10
+      else:
+        episode = 100 + day * 10
+        if part != "":
+          episode += ord(part[0]) - ord('a') + 1
+    else:
+      return None
 
     return Media.Episode(show, year, episode, title, year)
 
@@ -162,6 +178,7 @@ class F1Handler(RegexHandler):
   Q_RE = re.compile('quali', re.IGNORECASE)
   RACE_RE = re.compile('race', re.IGNORECASE)
   TED_RE = re.compile('ted.*qualifying.notebook', re.IGNORECASE)
+  IGNORE_RE = re.compile("([pr]addock.live)|(on.the.grid)")
 
   SCHEDULE = {
     '2017' : [
@@ -262,8 +279,9 @@ class F1Handler(RegexHandler):
     ]
 
   def handle(self, match, file):
-    basename = os.path.basename(file)
-    print basename
+    basename = os.path.splitext(file)[0]
+    if self.IGNORE_RE.match(basename, re.IGNORECASE):
+      return None
     m = self.WEEKEND_BUNDLE_RE.match(basename)
     if m:
       year = m.group('year')
@@ -354,14 +372,14 @@ def handle(file):
   basename = os.path.basename(file)
   for handler in REGEX_HANDLERS:
     for regex in handler.getRegexs():
-      match = re.search(regex, basename, re.IGNORECASE)
+      match = re.search(regex, file, re.IGNORECASE)
       if match:
         return handler.handle(match, file)
 
 
 def Scan(path, files, mediaList, subdirs, language=None, root=None):
   # Scan for video files.
-  VideoFiles.Scan(path, files, mediaList, subdirs)
+  # VideoFiles.Scan(path, files, mediaList, subdirs)
   scanFiles(files, mediaList)
 
 
