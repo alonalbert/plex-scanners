@@ -76,7 +76,7 @@ class UfcOnFoxHandler(RegexHandler):
     return Media.Episode(show, year, episode, title, year)
 
 class WsopHandler(RegexHandler):
-  PATTERN = 'world.series.of.poker.(?P<year>\d{4}).(?P<title>.*)'
+  PATTERN = 'world.series.of.poker.s?(?P<year>\d{4}).(?P<title>.*)'
 
   def getRegexs(self):
     return [
@@ -112,6 +112,12 @@ class WsopHandler(RegexHandler):
         episode = 100 + day * 10
         if part != "":
           episode += ord(part[0]) - ord('a') + 1
+        else:
+          m = re.match(".*part.(?P<part>\d+)", title,re.IGNORECASE)
+          if m:
+            part = m.group('part')
+            episode += int(part)
+
     else:
       return None
 
@@ -173,9 +179,9 @@ class BellatorHandler(RegexHandler):
 class F1Handler(RegexHandler):
   WEEKEND_BUNDLE_RE = re.compile('^(.*).formula1.(?P<year>\d+).r(?P<round>\d+).(?P<name>.*).Gran.Prix.(?P<show>.*)', re.IGNORECASE)
   P1_RE = re.compile('(.*practice.(one|1))|p1', re.IGNORECASE)
-  P2_RE = re.compile('(.*practice.(two|2))|p2', re.IGNORECASE)
-  P3_RE = re.compile('(.*practice.(three|3))|p1', re.IGNORECASE)
-  Q_RE = re.compile('quali', re.IGNORECASE)
+  P2_RE = re.compile('(.*practice.(two|2)[-._ ])|p2', re.IGNORECASE)
+  P3_RE = re.compile('(.*practice.(three|3))|p3|(3rd.practice)', re.IGNORECASE)
+  Q_RE = re.compile('qual', re.IGNORECASE)
   RACE_RE = re.compile('race', re.IGNORECASE)
   TED_RE = re.compile('ted.*qualifying.notebook', re.IGNORECASE)
   IGNORE_RE = re.compile("([pr]addock.live)|(on.the.grid)")
@@ -216,7 +222,7 @@ class F1Handler(RegexHandler):
 
       'Austria',
       'Great Britain',
-      'Germany'
+      'Germany',
       'Hungary',
 
       'Belgium',
@@ -264,17 +270,21 @@ class F1Handler(RegexHandler):
     'Japanese': 'Japan',
     'Japane': 'Japan',
     'American': 'United States',
+    'America': 'United States',
+    'USA': 'United States',
     'United.States': 'United States',
     'Mexican': 'Mexico',
     'Mexico': 'Mexico',
     'Brazilian': 'Brazil',
     'Brazil': 'Brazil',
     'Abu.Dhabi': 'Abu Dhabi',
+    'German': 'Germany',
   }
 
   def getRegexs(self):
     return [
       'Formula.?1.*',
+      'Formula.One.*',
       'F1.*',
     ]
 
@@ -340,14 +350,16 @@ class F1Handler(RegexHandler):
       return 'F1 Extras', 2, 'The F1 Report'
     elif re.search('driver(s)?.press', lower):
       return 'F1 Extras', 3, 'Driver Press Conference'
+    elif re.search('welcome.to.the.weekend', lower):
+      return 'F1 Extras', 4, 'Welcome to the Weekend'
     elif 'paddock' in lower:
-      return 'F1 Extras', 4, 'Paddock Uncut'
+      return 'F1 Extras', 5, 'Paddock Uncut'
     elif self.TED_RE.search(show):
-      return 'F1 Extras', 5, "Ted's Qualifying Notebook"
+      return 'F1 Extras', 6, "Ted's Qualifying Notebook"
     elif re.search('team.principal', lower):
-      return 'F1 Extras', 6, 'Team Principal Press Conference'
+      return 'F1 Extras', 7, 'Team Principal Press Conference'
     elif re.search('f1.show', lower):
-      return 'F1 Extras', 7, 'The F1 Show'
+      return 'F1 Extras', 8, 'The F1 Show'
     else:
       if 'pre' in lower:
         return 'F1', 31, 'Pre Race'
