@@ -1,7 +1,8 @@
 import re
 
 class BellatorAgent(object):
-  REGEX = re.compile('^bellator', re.IGNORECASE)
+  def get_regex(self):
+    return re.compile('^bellator', re.IGNORECASE)
 
   def __init__(self, log):
     if log is None:

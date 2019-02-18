@@ -1,10 +1,13 @@
 import re
 
-class UfcFightNightAgent(object):
-  def get_regex(self):
-    return re.compile('^ufc.fight.night', re.IGNORECASE)
 
-  def __init__(self, log):
+class UfcGenericAgent(object):
+  def get_regex(self):
+    return re.compile('^%s' % self.regex, re.IGNORECASE)
+
+  def __init__(self, regex, log):
+    self.regex = regex
+
     if log is None:
       self.log = Log
     else:
@@ -37,6 +40,7 @@ class UfcFightNightAgent(object):
       'title': title,
       'summary': '',
     }
+
 
 def Log(str):
   print str

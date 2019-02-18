@@ -2,7 +2,8 @@ import re
 import Wikipedia
 
 class UfcAgent(object):
-  REGEX = re.compile('^ufc', re.IGNORECASE)
+  def get_regex(self):
+    return re.compile('^ufc', re.IGNORECASE)
 
   def __init__(self, log):
     if log is None:

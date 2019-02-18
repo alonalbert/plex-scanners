@@ -2,6 +2,7 @@ import inspect
 from UfcAgent import UfcAgent
 from UfcFightNightAgent import UfcFightNightAgent
 from UfcOnFoxAgent import UfcOnFoxAgent
+from UfcGenericAgent import UfcGenericAgent
 from F1Agent import F1Agent
 from WsopAgent import  WsopAgent
 from BellatorAgent import BellatorAgent
@@ -32,6 +33,7 @@ AGENTS = [
   F1Agent(Log),
   WsopAgent(Log),
   BellatorAgent(Log),
+  UfcGenericAgent('ufc.on.fox', Log),
 ]
 
 class SportsScannerAgentTVShows(Agent.TV_Shows):
@@ -48,7 +50,7 @@ class SportsScannerAgentTVShows(Agent.TV_Shows):
 
     agent = None
     for ag in AGENTS:
-      if ag.REGEX.match(title):
+      if ag.get_regex().match(title):
         agent = ag
         break
     if agent is None:

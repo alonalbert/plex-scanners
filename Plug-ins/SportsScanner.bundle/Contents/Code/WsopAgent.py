@@ -1,7 +1,8 @@
 import re
 
 class WsopAgent(object):
-  REGEX = re.compile('^wsop', re.IGNORECASE)
+  def get_regex(self):
+    return re.compile('^wsop', re.IGNORECASE)
 
   def __init__(self, log):
     if log is None:

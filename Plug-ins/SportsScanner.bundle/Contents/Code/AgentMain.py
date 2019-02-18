@@ -10,7 +10,7 @@ def Log(str):
 if __name__ == '__main__':
   agent = BellatorAgent(Log)
 
-  title = 'Bettator'
+  title = 'UFC on ESPN'
   print title
   print agent.getShowMetadata(title)
   print agent.getSeasonMetadata(title, "2017")

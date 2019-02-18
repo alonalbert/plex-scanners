@@ -1,7 +1,8 @@
 import re
 
 class UfcOnFoxAgent(object):
-  REGEX = re.compile('^ufc.on.fox', re.IGNORECASE)
+  def get_regex(self):
+    return re.compile('^ufc.on.fox', re.IGNORECASE)
 
   def __init__(self, log):
     if log is None:

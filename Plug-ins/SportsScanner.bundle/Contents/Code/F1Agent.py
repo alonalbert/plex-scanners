@@ -2,7 +2,9 @@ import re
 
 
 class F1Agent(object):
-  REGEX = re.compile('^f1', re.IGNORECASE)
+  def get_regex(self):
+    return re.compile('^f1', re.IGNORECASE)
+
   SESSION_RE = re.compile('f1 (?P<extra>extras )?(?P<round>\d\d) (?P<location>[a-z ]+)$', re.IGNORECASE)
 
   PARTS = {
