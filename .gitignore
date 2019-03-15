@@ -2,3 +2,4 @@
 /save/
 *.pyc
 /test/
+.idea/

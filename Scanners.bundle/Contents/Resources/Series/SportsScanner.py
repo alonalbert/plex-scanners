@@ -271,7 +271,35 @@ class F1Handler(RegexHandler):
       'Brazil',
 
       'Abu Dhabi',
-    ]
+    ],
+    '2019' : [
+      'Australia',
+      'Bahrain',
+      'China',
+      'Azerbaijan',
+
+      'Spain',
+      'Monaco',
+      'Canada',
+      'France',
+
+      'Austria',
+      'Great Britain',
+      'Germany',
+      'Hungary',
+
+      'Belgium',
+      'Italy',
+      'Singapore',
+      'Russia',
+
+      'Japan',
+      'United States',
+      'Mexico',
+      'Brazil',
+
+      'Abu Dhabi',
+    ],
   }
 
   LOCATION_ALIASES = {
