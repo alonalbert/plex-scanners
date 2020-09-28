@@ -300,6 +300,30 @@ class F1Handler(RegexHandler):
 
       'Abu Dhabi',
     ],
+    '2020' : [
+      'Austrian',
+      'Styrian',
+      'Hungarian',
+
+      'British',
+      '70th Anniversary',
+      'Spanish',
+
+      'Belgian',
+      'Italian',
+      'Tuscan',
+
+      'Russian',
+      'Eifel',
+      'Portuguese',
+
+      'Emilia Romagna',
+      'Turkish',
+      'Bahrain',
+
+      'Sakhir',
+      'Abu Dhabi',
+    ],
   }
 
   LOCATION_ALIASES = {
