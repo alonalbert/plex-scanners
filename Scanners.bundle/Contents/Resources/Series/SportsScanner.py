@@ -380,7 +380,7 @@ class F1Handler(RegexHandler):
 
         round = self.SCHEDULE[str(year)].index(location) + 1
         name = location + ' Gran Prix'
-        show, part, title = self.getShowAndPart(basename)
+        show, part, title = self.getShowAndPart(basename.replace('P2P', ''))
 
         show = '%s %02d %s' % (show, round, location)
         return Media.Episode(show, year, round * 100 + part, name + ' ' + title, year)
@@ -423,6 +423,8 @@ class F1Handler(RegexHandler):
       return 'F1 Extras', 7, 'Team Principal Press Conference'
     elif re.search('f1.show', lower):
       return 'F1 Extras', 8, 'The F1 Show'
+    elif re.search('story.so.far', lower):
+      return 'F1 Extras', 9, 'Story So Far'
     else:
       if 'pre' in lower:
         return 'F1', 31, 'Pre Race'

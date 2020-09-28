@@ -22,7 +22,7 @@ def scan(scanner, root, path, media):
 
 if __name__ == '__main__':
   media = []
-  foo = imp.load_source('SportsScanner', 'SportsScanner.py')
+  # foo = imp.load_source('SportsScanner', 'SportsScanner.py')
 
   scanner = __import__(sys.argv[1])
   scan(scanner, sys.argv[2], "", media)
